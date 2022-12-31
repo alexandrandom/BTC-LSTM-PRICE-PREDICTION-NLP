@@ -6,10 +6,10 @@ rlybigdata=pd.read_csv(r"C:\Users\ACJ\Downloads\Bitcoin_tweets.csv", engine='pyt
 rlybigdata.to_csv(r"C:\Users\ACJ\Downloads\ANwork.csv",index=False)
 print("saved")
 
-df=pd.read_csv("/content/drive/MyDrive/Colab Notebooks/DATA_1/ANwork.csv", engine='python')
 
-#plot twist - importing libraries in the middle of code
-#this is a NLP lib
+df=pd.read_csv(r'C:\Users\ACJ\Downloads\ANwork.csv')
+
+
 from textblob import TextBlob as tb
 #defining the function that will calculate the polarity score of a given text item - tweet
 def calculate_polarity(tweet):
@@ -25,3 +25,10 @@ sweet_emotion=[] #hehe got the reference?
 for item in df["text"]:
   str_fr=str(item) #needed to add that bc previous code crashed at 4383361st item
   sweet_emotion.append(calculate_polarity(str_fr))
+
+
+print(len(sweet_emotion))
+df["sentiment"]=sweet_emotion
+
+df.to_csv(r"C:\Users\ACJ\Downloads\A_data.csv",index=False)
+print("saved")
