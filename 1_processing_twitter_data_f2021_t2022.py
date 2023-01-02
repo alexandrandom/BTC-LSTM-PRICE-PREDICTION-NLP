@@ -30,5 +30,33 @@ for item in df["text"]:
 print(len(sweet_emotion))
 df["sentiment"]=sweet_emotion
 
-df.to_csv(r"C:\Users\ACJ\Downloads\A_data.csv",index=False)
-print("saved")
+df2=df.drop(["text"], axis=1)
+df2[['date', 'time']] = df2['date'].str.split(' ', 1, expand=True)
+
+#reading the csv with stock prices
+prices=pd.read_csv("/content/drive/MyDrive/Colab Notebooks/DATA_1/BTC-USD.csv", engine='python')
+prices = prices[['Date', 'Close']]
+
+#left joining two dataframes together by date so that we have the prices and sentiments for each day that we have tweets for
+df_merged=df2.merge(prices, left_on='date', right_on="Date", how='left')
+
+#creating a new DF
+dates=[]
+sentiments=[]
+prices=[]
+
+for i in df_merged["date"]:
+  dates.append(str(i))
+for i in df_merged["sentiment"]:
+  sentiments.append(float(i))
+for i in df_merged["Close"]:
+  prices.append(float(i))
+
+test_one=pd.DataFrame()
+test_one["dates"]=dates
+test_one["prices"]=prices
+test_one["sentiment"]=sentiments
+
+#exporting the new file
+toexport=test_one.groupby(["dates", "prices"]).agg({"sentiment":"mean"})
+toexport.to_csv("/content/drive/MyDrive/Colab Notebooks/DATA_1/TESTOWE.csv")
